@@ -1,0 +1,15 @@
+C:/Code/berani-odoo/courier_core/__init__.py
+C:/Code/berani-odoo/courier_core/models/__init__.py
+C:/Code/berani-odoo/courier_core/__manifest__.py
+C:/Code/berani-odoo/courier_core/models/courier_customer.py
+C:/Code/berani-odoo/courier_core/models/courier_shipment.py
+C:/Code/berani-odoo/courier_core/models/courier_incident.py
+C:/Code/berani-odoo/courier_core/views/courier_incident_views.xml
+C:/Code/berani-odoo/courier_core/security/ir.model.access.csv
+C:/Code/berani-odoo/courier_core/README.md
+C:\Code\berani-odoo\courier_core\models\courier_customer.py [48b60ae: feat(models): add courier.customer stub model]
+C:\Code\berani-odoo\courier_core\models\courier_shipment.py [bb55e98: feat(models): add courier.shipment stub model]
+C:\Code\berani-odoo\courier_core\models\courier_incident.py [2db119f: feat(models): add courier.incident model with full implementation]
+C:\Code\berani-odoo\courier_core\views\courier_incident_views.xml [62a2bba: feat(views): add incident views, action, and menu]
+C:\Code\berani-odoo\courier_core\security\ir.model.access.csv [4100ca7: feat(security): add access rights for all models]
+C:\Code\berani-odoo\courier_core\README.md [26d01db: docs: add README with installation and testing instructions]
