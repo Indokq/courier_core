@@ -115,15 +115,9 @@
         </field>
     </record>
 
-    <!-- Root Menu -->
-    <menuitem id="menu_courier_root"
-              name="BeraniExpress Courier"
-              sequence="10"/>
-
-    <!-- Sub Menu -->
+    <!-- Menu -->
     <menuitem id="menu_courier_incident"
               name="Log Insiden"
-              parent="menu_courier_root"
               action="action_courier_incident"
               sequence="10"/>
 </odoo>

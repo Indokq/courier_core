@@ -2,7 +2,25 @@ from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
 
+class CourierCustomer(models.Model):
+    """Stub model for customer - required for Many2one relation."""
+    _name = 'courier.customer'
+    _description = 'Courier Customer'
+
+    name = fields.Char(string='Name', required=True)
+
+
+class CourierShipment(models.Model):
+    """Stub model for shipment - required for Many2one relation."""
+    _name = 'courier.shipment'
+    _description = 'Courier Shipment'
+
+    name = fields.Char(string='No. Resi', required=True)
+    customer_id = fields.Many2one('courier.customer', string='Customer')
+
+
 class CourierIncident(models.Model):
+    """Main model for incident logging."""
     _name = 'courier.incident'
     _description = 'Courier Incident Log'
     _order = 'incident_datetime desc'
@@ -84,10 +102,12 @@ class CourierIncident(models.Model):
                 )
 
     def action_mark_followup(self):
+        """Button action: Change state from draft to followup."""
         for record in self:
             record.state = 'followup'
 
     def action_resolve(self):
+        """Button action: Change state to done and set resolved_at."""
         for record in self:
             record.write({
                 'state': 'done',
