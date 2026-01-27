@@ -21,6 +21,7 @@
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',
+        'data/demo_data.xml',
         'views/courier_incident_views.xml',
     ],
     'installable': True,

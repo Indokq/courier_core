@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Sample Customers -->
+        <record id="customer_ahmad" model="courier.customer">
+            <field name="name">Ahmad F</field>
+        </record>
+        <record id="customer_siti" model="courier.customer">
+            <field name="name">Siti N</field>
+        </record>
+        <record id="customer_yusuf" model="courier.customer">
+            <field name="name">Yusuf R</field>
+        </record>
+
+        <!-- Sample Shipments -->
+        <record id="shipment_001" model="courier.shipment">
+            <field name="name">QTN-00123</field>
+            <field name="customer_id" ref="customer_ahmad"/>
+        </record>
+        <record id="shipment_002" model="courier.shipment">
+            <field name="name">QTN-00456</field>
+            <field name="customer_id" ref="customer_siti"/>
+        </record>
+        <record id="shipment_003" model="courier.shipment">
+            <field name="name">QTN-00303</field>
+            <field name="customer_id" ref="customer_yusuf"/>
+        </record>
+    </data>
+</odoo>
