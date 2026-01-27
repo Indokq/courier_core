@@ -45,7 +45,7 @@ courier_core/
 
 ### Langkah 1: Buat Insiden Baru
 1. Buka menu **Log Insiden**
-2. Klik tombol **Create**
+2. Klik tombol **New**
 3. Isi field yang diperlukan:
    - Name
    - Jamaah (pilih pelanggan)
