@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Tree View -->
+    <!-- List View (Tree) -->
     <record id="view_courier_incident_tree" model="ir.ui.view">
         <field name="name">courier.incident.tree</field>
         <field name="model">courier.incident</field>
         <field name="arch" type="xml">
-            <list string="Incident Log"
+            <list string="Incident Log Operasional"
                   decoration-warning="state == 'followup'"
                   decoration-success="state == 'done'">
-                <field name="name"/>
-                <field name="customer_id"/>
-                <field name="incident_type"/>
-                <field name="severity"/>
-                <field name="incident_datetime"/>
-                <field name="state"/>
+                <field name="name" string="Name"/>
+                <field name="customer_id" string="Jamaah"/>
+                <field name="shipment_id" string="Quotation"/>
+                <field name="incident_type" string="Type"/>
+                <field name="severity" string="Severity"/>
+                <field name="state" string="State"/>
             </list>
         </field>
     </record>
@@ -23,7 +23,7 @@
         <field name="name">courier.incident.form</field>
         <field name="model">courier.incident</field>
         <field name="arch" type="xml">
-            <form string="Incident Log">
+            <form string="Incident Log Operasional">
                 <header>
                     <button name="action_mark_followup"
                             string="Mark Follow-up"
@@ -42,27 +42,38 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="customer_id"/>
-                            <field name="shipment_id"/>
-                            <field name="incident_type"/>
-                        </group>
-                        <group>
-                            <field name="incident_datetime"/>
-                            <field name="severity"/>
-                            <field name="resolved_at"/>
+                            <field name="name" string="Name"/>
                         </group>
                     </group>
-                    <notebook>
-                        <page string="Kronologi">
-                            <field name="description"
-                                   placeholder="Detail kejadian..."/>
-                        </page>
-                        <page string="Catatan Tindakan">
-                            <field name="followup_note"
-                                   placeholder="Tindakan yang diambil..."/>
-                        </page>
-                    </notebook>
+                    <group>
+                        <group>
+                            <field name="customer_id" string="Jamaah"/>
+                        </group>
+                        <group>
+                            <field name="shipment_id" string="Quotation"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="incident_type" string="Incident Type"/>
+                            <field name="severity" string="Severity"/>
+                            <field name="state" string="State" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="resolved_at" string="Resolve at (read only)"/>
+                            <field name="incident_datetime" string="Incident Datetime"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"
+                               string="Description"
+                               placeholder="Detail kejadian..."/>
+                    </group>
+                    <group>
+                        <field name="followup_note"
+                               string="Follow up note"
+                               placeholder="Tindakan yang diambil..."/>
+                    </group>
                 </sheet>
             </form>
         </field>
@@ -76,15 +87,16 @@
             <search string="Search Incidents">
                 <field name="name"/>
                 <field name="customer_id"/>
+                <field name="shipment_id"/>
                 <field name="incident_type"/>
                 <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
                 <filter string="Follow-up" name="filter_followup" domain="[('state', '=', 'followup')]"/>
                 <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Customer" name="group_customer" context="{'group_by': 'customer_id'}"/>
+                    <filter string="Jamaah" name="group_customer" context="{'group_by': 'customer_id'}"/>
                     <filter string="Type" name="group_type" context="{'group_by': 'incident_type'}"/>
                     <filter string="Severity" name="group_severity" context="{'group_by': 'severity'}"/>
-                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>
@@ -92,7 +104,7 @@
 
     <!-- Action -->
     <record id="action_courier_incident" model="ir.actions.act_window">
-        <field name="name">Log Insiden</field>
+        <field name="name">Incident Log Operasional</field>
         <field name="res_model">courier.incident</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_courier_incident_search"/>
