@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_courier_incident_tree" model="ir.ui.view">
+        <field name="name">courier.incident.tree</field>
+        <field name="model">courier.incident</field>
+        <field name="arch" type="xml">
+            <tree string="Incident Log"
+                  decoration-warning="state == 'followup'"
+                  decoration-success="state == 'done'">
+                <field name="name"/>
+                <field name="customer_id"/>
+                <field name="incident_type"/>
+                <field name="severity"/>
+                <field name="incident_datetime"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_courier_incident_form" model="ir.ui.view">
+        <field name="name">courier.incident.form</field>
+        <field name="model">courier.incident</field>
+        <field name="arch" type="xml">
+            <form string="Incident Log">
+                <header>
+                    <button name="action_mark_followup"
+                            string="Mark Follow-up"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_resolve"
+                            string="Resolve"
+                            type="object"
+                            class="btn-success"
+                            invisible="state != 'followup'"/>
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,followup,done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="customer_id"/>
+                            <field name="shipment_id"/>
+                            <field name="incident_type"/>
+                        </group>
+                        <group>
+                            <field name="incident_datetime"/>
+                            <field name="severity"/>
+                            <field name="resolved_at"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Kronologi">
+                            <field name="description"
+                                   placeholder="Detail kejadian..."/>
+                        </page>
+                        <page string="Catatan Tindakan">
+                            <field name="followup_note"
+                                   placeholder="Tindakan yang diambil..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_courier_incident_search" model="ir.ui.view">
+        <field name="name">courier.incident.search</field>
+        <field name="model">courier.incident</field>
+        <field name="arch" type="xml">
+            <search string="Search Incidents">
+                <field name="name"/>
+                <field name="customer_id"/>
+                <field name="incident_type"/>
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Follow-up" name="filter_followup" domain="[('state', '=', 'followup')]"/>
+                <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="group_customer" context="{'group_by': 'customer_id'}"/>
+                    <filter string="Type" name="group_type" context="{'group_by': 'incident_type'}"/>
+                    <filter string="Severity" name="group_severity" context="{'group_by': 'severity'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_courier_incident" model="ir.actions.act_window">
+        <field name="name">Log Insiden</field>
+        <field name="res_model">courier.incident</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_courier_incident_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first incident log
+            </p>
+        </field>
+    </record>
+
+    <!-- Root Menu -->
+    <menuitem id="menu_courier_root"
+              name="BeraniExpress Courier"
+              sequence="10"/>
+
+    <!-- Sub Menu -->
+    <menuitem id="menu_courier_incident"
+              name="Log Insiden"
+              parent="menu_courier_root"
+              action="action_courier_incident"
+              sequence="10"/>
+</odoo>
