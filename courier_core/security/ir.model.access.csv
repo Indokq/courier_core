@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_courier_customer_user,courier.customer.user,model_courier_customer,base.group_user,1,1,1,1
+access_courier_shipment_user,courier.shipment.user,model_courier_shipment,base.group_user,1,1,1,1
+access_courier_incident_user,courier.incident.user,model_courier_incident,base.group_user,1,1,1,1
