@@ -40,40 +40,43 @@
                            statusbar_visible="draft,followup,done"/>
                 </header>
                 <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Judul Insiden..." class="o_text_overflow"/>
+                        </h1>
+                    </div>
                     <group>
-                        <group>
-                            <field name="name" string="Name"/>
-                        </group>
-                    </group>
-                    <group>
-                        <group>
+                        <group string="Informasi Pelanggan">
                             <field name="customer_id" string="Jamaah"/>
-                        </group>
-                        <group>
                             <field name="shipment_id" string="Quotation"/>
                         </group>
-                    </group>
-                    <group>
-                        <group>
+                        <group string="Detail Insiden">
                             <field name="incident_type" string="Incident Type"/>
-                            <field name="severity" string="Severity"/>
-                            <field name="state" string="State" readonly="1"/>
-                        </group>
-                        <group>
-                            <field name="resolved_at" string="Resolve at (read only)"/>
+                            <field name="severity" string="Severity" widget="radio"/>
                             <field name="incident_datetime" string="Incident Datetime"/>
                         </group>
                     </group>
                     <group>
-                        <field name="description"
-                               string="Description"
-                               placeholder="Detail kejadian..."/>
+                        <group string="Status">
+                            <field name="state" string="State" readonly="1"/>
+                            <field name="resolved_at" string="Resolved at"/>
+                        </group>
                     </group>
-                    <group>
-                        <field name="followup_note"
-                               string="Follow up note"
-                               placeholder="Tindakan yang diambil..."/>
-                    </group>
+                    <notebook>
+                        <page string="Kronologi" name="page_description">
+                            <field name="description"
+                                   placeholder="Detail kronologi kejadian..."
+                                   nolabel="1"
+                                   class="oe_inline"/>
+                        </page>
+                        <page string="Catatan Tindakan" name="page_followup">
+                            <field name="followup_note"
+                                   placeholder="Tindakan yang diambil..."
+                                   nolabel="1"
+                                   class="oe_inline"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
