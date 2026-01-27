@@ -1,104 +1,244 @@
-# Courier Core - Incident Log System
+# Courier Core - Sistem Log Insiden
 
-Odoo 18 module for tracking and managing courier incidents for BeraniExpress.
+Modul Odoo 18 untuk mencatat dan mengelola insiden pengiriman pada layanan kurir BeraniExpress.
 
-## Features
+## Daftar Isi
 
-- **Incident Logging**: Track incidents with severity levels (low, medium, high)
-- **Workflow States**: Draft → Follow-up → Done
-- **Validation**: Follow-up notes required before resolving
-- **Unique Constraint**: Prevents duplicate incidents (same customer, type, datetime)
+- [Fitur](#fitur)
+- [Persyaratan Sistem](#persyaratan-sistem)
+- [Instalasi](#instalasi)
+- [Struktur Modul](#struktur-modul)
+- [Panduan Penggunaan](#panduan-penggunaan)
+- [Spesifikasi Teknis](#spesifikasi-teknis)
+- [Pengujian Manual](#pengujian-manual)
+- [Lisensi](#lisensi)
 
-## Installation
+---
 
-1. Copy the `courier_core` folder to your Odoo addons directory
-2. Update the apps list in Odoo (Apps → Update Apps List)
-3. Search for "Courier Core" and install
+## Fitur
 
-## Module Structure
+- **Pencatatan Insiden**: Catat insiden dengan tingkat urgensi (low, medium, high)
+- **Alur Kerja Status**: Draft → Follow-up → Done
+- **Validasi Otomatis**: Catatan tindak lanjut wajib diisi sebelum menyelesaikan insiden
+- **Constraint Unik**: Mencegah duplikasi insiden (kombinasi pelanggan, tipe, dan waktu yang sama)
+- **Dekorasi Visual**: Warna baris berbeda berdasarkan status (kuning untuk follow-up, hijau untuk done)
+
+---
+
+## Persyaratan Sistem
+
+| Komponen | Versi |
+|----------|-------|
+| Odoo | 18.0 |
+| Python | 3.10 atau 3.11 |
+| PostgreSQL | 14+ |
+
+---
+
+## Instalasi
+
+1. **Salin modul** ke direktori addons Odoo Anda:
+   ```bash
+   cp -r courier_core /path/to/odoo/addons/
+   ```
+
+2. **Perbarui daftar aplikasi** di Odoo:
+   - Buka menu **Apps**
+   - Klik **Update Apps List**
+
+3. **Cari dan instal modul**:
+   - Ketik "Courier Core" di pencarian
+   - Klik **Install**
+
+---
+
+## Struktur Modul
 
 ```
 courier_core/
-├── __init__.py
-├── __manifest__.py
-├── README.md
+├── __init__.py              # Inisialisasi modul
+├── __manifest__.py          # Metadata modul
+├── README.md                # Dokumentasi
+├── data/
+│   └── demo_data.xml        # Data contoh (pelanggan & pengiriman)
 ├── models/
-│   ├── __init__.py
-│   ├── courier_customer.py
-│   ├── courier_shipment.py
-│   └── courier_incident.py
+│   ├── __init__.py          # Inisialisasi model
+│   ├── courier_customer.py  # Model pelanggan
+│   ├── courier_shipment.py  # Model pengiriman
+│   └── courier_incident.py  # Model insiden (utama)
 ├── views/
-│   └── courier_incident_views.xml
+│   └── courier_incident_views.xml  # Tampilan dan menu
 └── security/
-    └── ir.model.access.csv
+    └── ir.model.access.csv  # Hak akses pengguna
 ```
 
-## Testing Instructions
+---
 
-### Manual Testing Steps
+## Panduan Penggunaan
 
-1. **Create a Customer**
-   - Go to Settings → Technical → Sequences & Identifiers → Database Structure → Models
-   - Find `courier.customer` and create a test record via SQL or shell
+### Mengakses Menu
+1. Login ke Odoo
+2. Klik menu **BeraniExpress Courier**
+3. Pilih **Log Insiden**
 
-2. **Create an Incident**
-   - Navigate to BeraniExpress Courier → Log Insiden
-   - Click "Create"
-   - Fill in required fields:
-     - Judul Insiden (name)
-     - Pelanggan (customer_id)
-     - Waktu (incident_datetime) - defaults to now
-   - Save the record
+### Membuat Insiden Baru
+1. Klik tombol **Create**
+2. Isi field yang diperlukan:
+   - **Name**: Judul insiden
+   - **Jamaah**: Pilih pelanggan
+   - **Quotation**: Pilih nomor resi (opsional)
+   - **Incident Type**: Pilih tipe insiden
+   - **Severity**: Pilih tingkat urgensi
+   - **Incident Datetime**: Waktu kejadian
+   - **Description**: Detail kronologi kejadian
+3. Klik **Save**
 
-3. **Mark Follow-up**
-   - Open an incident in Draft state
-   - Click "Mark Follow-up" button
-   - State changes to "Follow-up"
-   - Row color in tree view changes to orange/warning
+### Alur Kerja (Workflow)
 
-4. **Resolve Incident**
-   - Open an incident in Follow-up state
-   - Fill in "Catatan" (followup_note) in the "Catatan Tindakan" tab
-   - Click "Resolve" button
-   - State changes to "Done"
-   - "Selesai pada" (resolved_at) is auto-filled with current datetime
-   - Row color in tree view changes to green/success
+```
+┌─────────┐    Mark Follow-up    ┌───────────┐    Resolve    ┌────────┐
+│  Draft  │ ──────────────────→  │ Follow-up │ ────────────→ │  Done  │
+└─────────┘                      └───────────┘               └────────┘
+                                       │
+                                       ▼
+                              Wajib isi "Follow up note"
+                              sebelum klik "Resolve"
+```
 
-5. **Test Validation**
-   - Try to resolve an incident without filling followup_note
-   - Expected: ValidationError message appears
+1. **Draft**: Status awal saat insiden dibuat
+2. **Follow-up**: Klik tombol "Mark Follow-up" untuk menandai sedang ditindaklanjuti
+3. **Done**: Isi catatan tindakan, lalu klik "Resolve" untuk menyelesaikan
 
-6. **Test Unique Constraint**
-   - Try to create a duplicate incident with same customer, type, and datetime
-   - Expected: Database constraint error
+---
 
-## Technical Specifications
+## Spesifikasi Teknis
 
 ### Model: `courier.incident`
 
-| Field | Type | Description |
-|-------|------|-------------|
-| name | Char | Judul Insiden (required) |
-| customer_id | Many2one | Link to courier.customer (required) |
-| shipment_id | Many2one | Link to courier.shipment |
-| incident_type | Selection | health, lost_item, delay, other |
-| incident_datetime | Datetime | When incident occurred (required) |
-| severity | Selection | low, medium, high |
-| description | Text | Incident details |
-| followup_note | Text | Action taken |
-| state | Selection | draft, followup, done |
-| resolved_at | Datetime | Auto-filled when resolved |
+| Field | Label | Tipe | Keterangan |
+|-------|-------|------|------------|
+| `name` | Judul Insiden | Char | Wajib diisi |
+| `customer_id` | Jamaah/Pelanggan | Many2one | Relasi ke courier.customer (wajib) |
+| `shipment_id` | Quotation/No. Resi | Many2one | Relasi ke courier.shipment |
+| `incident_type` | Tipe Insiden | Selection | health, lost_item, delay, other |
+| `incident_datetime` | Waktu Kejadian | Datetime | Wajib, default: waktu sekarang |
+| `severity` | Urgensi | Selection | low, medium, high |
+| `description` | Kronologi | Text | Detail kejadian |
+| `followup_note` | Catatan Tindakan | Text | Tindakan yang diambil |
+| `state` | Status | Selection | draft, followup, done |
+| `resolved_at` | Selesai Pada | Datetime | Otomatis terisi saat status Done |
 
-### Business Logic
+### Metode Bisnis
 
-- `action_mark_followup()`: Changes state from draft to followup
-- `action_resolve()`: Changes state to done and sets resolved_at
+| Metode | Fungsi |
+|--------|--------|
+| `action_mark_followup()` | Mengubah status dari Draft ke Follow-up |
+| `action_resolve()` | Mengubah status ke Done dan mengisi `resolved_at` |
 
 ### Constraints
 
-- **SQL**: Unique combination of (customer_id, incident_type, incident_datetime)
-- **Python**: followup_note required when state is 'done'
+| Tipe | Deskripsi |
+|------|-----------|
+| SQL Constraint | Kombinasi unik: customer_id + incident_type + incident_datetime |
+| Python Constraint | Field `followup_note` wajib diisi sebelum status Done |
 
-## License
+### Dekorasi Tree View
 
-LGPL-3
+| Status | Warna |
+|--------|-------|
+| Draft | Default |
+| Follow-up | Kuning (warning) |
+| Done | Hijau (success) |
+
+---
+
+## Pengujian Manual
+
+### Langkah Pengujian
+
+#### 1. Buat Insiden Baru
+```
+Menu: BeraniExpress Courier → Log Insiden → Create
+```
+- Isi Name: "Test Insiden"
+- Pilih Jamaah: "Ahmad F"
+- Pilih Quotation: "QTN-00123"
+- Pilih Incident Type: "delay"
+- Pilih Severity: "medium"
+- Klik Save
+
+#### 2. Mark Follow-up
+- Buka insiden yang baru dibuat
+- Klik tombol **"Mark Follow-up"**
+- Verifikasi: Status berubah menjadi "Follow-up"
+- Verifikasi: Baris di list view berwarna kuning
+
+#### 3. Resolve Insiden
+- Isi field **"Follow up note"**: "Sudah ditangani"
+- Klik tombol **"Resolve"**
+- Verifikasi: Status berubah menjadi "Done"
+- Verifikasi: Field "Resolve at" terisi otomatis
+- Verifikasi: Baris di list view berwarna hijau
+
+#### 4. Test Validasi
+- Buat insiden baru, Mark Follow-up
+- **Jangan isi** Follow up note
+- Klik Resolve
+- Verifikasi: Muncul error "Catatan (followup_note) wajib diisi sebelum menyelesaikan insiden!"
+
+#### 5. Test Constraint Unik
+- Buat insiden dengan data yang sama (customer, type, datetime)
+- Verifikasi: Muncul error database constraint
+
+---
+
+## Data Demo
+
+Modul ini menyertakan data contoh untuk pengujian:
+
+### Pelanggan
+| Nama |
+|------|
+| Ahmad F |
+| Siti N |
+| Yusuf R |
+
+### Pengiriman (Quotation)
+| No. Resi | Pelanggan |
+|----------|-----------|
+| QTN-00123 | Ahmad F |
+| QTN-00456 | Siti N |
+| QTN-00303 | Yusuf R |
+
+---
+
+## Teknologi
+
+- **Platform**: Odoo 18.0
+- **Bahasa**: Python 3.11, XML
+- **Database**: PostgreSQL
+- **Framework**: Odoo ORM
+
+---
+
+## Referensi Dokumentasi
+
+- [Odoo 18 Developer Documentation](https://www.odoo.com/documentation/18.0/developer.html)
+- [Odoo ORM API](https://www.odoo.com/documentation/18.0/developer/reference/backend/orm.html)
+- [Conventional Commits](https://www.conventionalcommits.org/)
+
+---
+
+## Lisensi
+
+LGPL-3 (GNU Lesser General Public License v3.0)
+
+---
+
+## Penulis
+
+Dikembangkan untuk Technical Test PT Berani Digital Indonesia.
+
+---
+
+*Dokumentasi ini dibuat mengikuti standar Odoo 18 dan best practices pengembangan modul.*
