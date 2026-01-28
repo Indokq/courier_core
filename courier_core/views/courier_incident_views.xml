@@ -8,12 +8,12 @@
             <list string="Incident Log Operasional"
                   decoration-warning="state == 'followup'"
                   decoration-success="state == 'done'">
-                <field name="name" string="Name"/>
-                <field name="customer_id" string="Jamaah"/>
-                <field name="shipment_id" string="Quotation"/>
-                <field name="incident_type" string="Type"/>
-                <field name="severity" string="Severity"/>
-                <field name="state" string="State"/>
+                <field name="name" string="Judul Insiden"/>
+                <field name="customer_id" string="Pelanggan"/>
+                <field name="shipment_id" string="No. Resi"/>
+                <field name="incident_type" string="Tipe"/>
+                <field name="severity" string="Urgensi"/>
+                <field name="state" string="Status"/>
             </list>
         </field>
     </record>
@@ -48,19 +48,19 @@
                     </div>
                     <group>
                         <group string="Informasi Pelanggan">
-                            <field name="customer_id" string="Jamaah"/>
-                            <field name="shipment_id" string="Quotation"/>
+                            <field name="customer_id" string="Pelanggan"/>
+                            <field name="shipment_id" string="No. Resi"/>
                         </group>
                         <group string="Detail Insiden">
-                            <field name="incident_type" string="Incident Type"/>
-                            <field name="severity" string="Severity" widget="radio"/>
-                            <field name="incident_datetime" string="Incident Datetime"/>
+                            <field name="incident_type" string="Tipe"/>
+                            <field name="severity" string="Urgensi" widget="radio"/>
+                            <field name="incident_datetime" string="Waktu"/>
                         </group>
                     </group>
                     <group>
                         <group string="Status">
-                            <field name="state" string="State" readonly="1"/>
-                            <field name="resolved_at" string="Resolved at"/>
+                            <field name="state" string="Status" readonly="1"/>
+                            <field name="resolved_at" string="Selesai pada"/>
                         </group>
                     </group>
                     <notebook>
@@ -96,10 +96,10 @@
                 <filter string="Follow-up" name="filter_followup" domain="[('state', '=', 'followup')]"/>
                 <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Jamaah" name="group_customer" context="{'group_by': 'customer_id'}"/>
-                    <filter string="Type" name="group_type" context="{'group_by': 'incident_type'}"/>
-                    <filter string="Severity" name="group_severity" context="{'group_by': 'severity'}"/>
-                    <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Pelanggan" name="group_customer" context="{'group_by': 'customer_id'}"/>
+                    <filter string="Tipe" name="group_type" context="{'group_by': 'incident_type'}"/>
+                    <filter string="Urgensi" name="group_severity" context="{'group_by': 'severity'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>
